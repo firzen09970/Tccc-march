@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCCC 戰術戰傷救護數位手冊</title>
+    <title>TCCC 戰術戰傷救護數位手冊 (完整版)</title>
     
     <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -30,6 +30,13 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -38,25 +45,13 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Icons
-        const Icons = {
-            Shield: () => <i data-lucide="shield" className="w-5 h-5"></i>,
-            Activity: () => <i data-lucide="activity" className="w-5 h-5"></i>,
-            Radio: () => <i data-lucide="radio" className="w-5 h-5"></i>,
-            AlertCircle: () => <i data-lucide="alert-circle" className="w-5 h-5"></i>,
-            CheckCircle: () => <i data-lucide="check-circle" className="w-5 h-5"></i>,
-            FileText: () => <i data-lucide="file-text" className="w-5 h-5"></i>,
-            Menu: () => <i data-lucide="menu" className="w-5 h-5"></i>,
-            HeartPulse: () => <i data-lucide="heart-pulse" className="w-5 h-5"></i>,
-            Cross: () => <i data-lucide="plus-circle" className="w-5 h-5"></i>,
-            ArrowRight: () => <i data-lucide="arrow-right" className="w-5 h-5"></i>
-        };
-
         // Component: Lucide Icon Wrapper
         const Icon = ({ name, className }) => {
             useEffect(() => {
-                lucide.createIcons();
-            }, []);
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
             return <i data-lucide={name} className={className}></i>;
         };
 
@@ -64,7 +59,9 @@
             const [activeTab, setActiveTab] = useState('CUF');
             
             useEffect(() => {
-                lucide.createIcons();
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
             }, [activeTab]);
 
             const tabs = [
@@ -77,20 +74,20 @@
             return (
                 <div className="min-h-screen pb-20 md:pb-0 md:pl-64">
                     {/* Mobile Header */}
-                    <header className="bg-slate-900 border-b border-slate-700 p-4 sticky top-0 z-50 md:hidden flex items-center justify-between">
+                    <header className="bg-slate-900 border-b border-slate-700 p-4 sticky top-0 z-50 md:hidden flex items-center justify-between shadow-lg">
                         <div className="flex items-center space-x-2">
                             <span className="text-emerald-500 font-bold text-xl tracking-tighter">TCCC</span>
-                            <span className="text-sm text-slate-400">戰術戰傷救護</span>
+                            <span className="text-sm text-slate-400">完整教戰手冊</span>
                         </div>
                     </header>
 
                     {/* Desktop Sidebar / Mobile Bottom Nav */}
-                    <nav className="fixed bottom-0 w-full md:w-64 md:h-screen md:top-0 md:left-0 bg-slate-800 border-t md:border-t-0 md:border-r border-slate-700 z-50 flex md:flex-col justify-around md:justify-start md:p-4">
+                    <nav className="fixed bottom-0 w-full md:w-64 md:h-screen md:top-0 md:left-0 bg-slate-800 border-t md:border-t-0 md:border-r border-slate-700 z-50 flex md:flex-col justify-around md:justify-start md:p-4 shadow-2xl">
                         <div className="hidden md:flex items-center space-x-2 mb-8 px-2">
                             <div className="w-8 h-8 bg-emerald-600 rounded flex items-center justify-center font-bold text-white">✚</div>
                             <div>
                                 <h1 className="text-xl font-bold text-emerald-400">TCCC</h1>
-                                <p className="text-xs text-slate-400">數位教戰手冊</p>
+                                <p className="text-xs text-slate-400">戰術戰傷救護</p>
                             </div>
                         </div>
                         
@@ -111,7 +108,7 @@
                     </nav>
 
                     {/* Main Content Area */}
-                    <main className="p-4 md:p-8 max-w-4xl mx-auto">
+                    <main className="p-4 md:p-8 max-w-4xl mx-auto mb-16 md:mb-0">
                         {activeTab === 'CUF' && <PhaseCUF />}
                         {activeTab === 'TFC' && <PhaseTFC />}
                         {activeTab === 'EVAC' && <PhaseEVAC />}
@@ -128,29 +125,31 @@
                     <div className="bg-red-900/30 border border-red-700/50 p-4 rounded-lg">
                         <h2 className="text-2xl font-bold text-red-400 flex items-center gap-2">
                             <Icon name="flame" className="w-6 h-6" /> 
-                            Care Under Fire (CUF) 敵火下作業
+                            Care Under Fire (CUF) 敵火下
                         </h2>
-                        <p className="text-red-200 mt-2 text-sm">目標：壓制敵火、自救互救、快速脫離。</p>
                         <div className="mt-2 text-xs bg-red-950/50 p-2 rounded inline-block text-red-300 border border-red-800">
-                            ⏱ 限時 15 分鐘
+                            ⏱ 15分鐘內完成
                         </div>
                     </div>
 
-                    {/* Report Script */}
-                    <div className="glass-panel p-5 rounded-xl border-l-4 border-emerald-500">
-                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                            <Icon name="radio" className="w-5 h-5 text-emerald-400" />
-                            自救互救報告詞
+                    {/* Report 3D */}
+                    <div className="glass-panel p-5 rounded-xl border-l-4 border-yellow-500">
+                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2 text-yellow-100">
+                            <Icon name="crosshair" className="w-5 h-5 text-yellow-400" />
+                            接敵發現敵人 ➔ 報 3D
                         </h3>
-                        <div className="bg-slate-950 p-4 rounded font-mono text-sm text-emerald-300">
-                            「報告！目前位置位於[3D地形位置]，前方發現[敵人]，我軍裝備無損！」
+                        <div className="text-slate-300 text-sm mb-2">
+                            需回報：敵人人數、所持武器、方向距離
+                        </div>
+                        <div className="bg-slate-950 p-3 rounded font-mono text-sm text-yellow-300">
+                            範例：「發現前方 100 公尺，敵一名，手持步槍。」
                         </div>
                     </div>
 
                     {/* 3 Questions Checklist */}
-                    <div className="space-y-3">
-                        <h3 className="font-bold text-slate-300 text-lg">三句自救互救問話</h3>
-                        <CheckItem text="1. 你可以自行上止血帶嗎？" />
+                    <div className="space-y-3 bg-slate-800 p-4 rounded-lg">
+                        <h3 className="font-bold text-slate-300 text-lg">發現友軍傷患 ➔ 三句自救互救報告詞</h3>
+                        <CheckItem text="1. 弟兄！你可以自行上止血帶嗎？" />
                         <CheckItem text="2. 你可以自行退到掩蔽物後方嗎？" />
                         <CheckItem text="3. 你可以自行火力反擊嗎？" />
                     </div>
@@ -159,8 +158,13 @@
                     <div className="bg-slate-800 p-4 rounded-lg border border-slate-600">
                         <h3 className="font-bold text-white mb-2">處置重點</h3>
                         <ul className="list-disc list-inside space-y-2 text-slate-300">
-                            <li><strong className="text-red-400">大出血上止血帶</strong>：務必寫上時間 (Time)。</li>
-                            <li><strong className="text-yellow-400">撤離</strong>：將傷患移至相對安全區 (掩體後)。</li>
+                            <li>
+                                <strong className="text-red-400">大出血上止血帶</strong>：
+                                <span className="bg-red-900/50 text-red-200 px-2 py-0.5 rounded text-sm ml-2">高及緊</span>
+                                <span className="bg-red-900/50 text-red-200 px-2 py-0.5 rounded text-sm ml-2">20秒內完成</span>
+                            </li>
+                            <li>寫上時間 (Time)。</li>
+                            <li><strong className="text-yellow-400">撤離</strong>：將傷患移至安全區。</li>
                         </ul>
                     </div>
                 </div>
@@ -174,19 +178,21 @@
                     <div className="bg-emerald-900/30 border border-emerald-700/50 p-4 rounded-lg">
                         <h2 className="text-2xl font-bold text-emerald-400 flex items-center gap-2">
                             <Icon name="activity" className="w-6 h-6" /> 
-                            Tactical Field Care (TFC)
+                            Tactical Field Care (TFC) 戰術區
                         </h2>
-                        <p className="text-emerald-200 mt-2 text-sm">傷患收集點救護。重點：MARCH 評估與處置。</p>
+                        <p className="text-emerald-200 mt-2 text-sm">傷患收集點救護。</p>
                     </div>
 
                     {/* Initial Steps */}
                     <div className="bg-slate-800 p-4 rounded-lg">
                         <h3 className="text-lg font-bold text-slate-200 mb-2">初步檢查程序</h3>
-                        <ol className="list-decimal list-inside space-y-1 text-slate-400">
-                            <li>檢查止血帶（有無鬆脫、有無滲血）</li>
-                            <li>卸除武裝及通信器材</li>
-                            <li>評估意識（清、聲、痛、否）</li>
-                            <li className="text-emerald-400 font-bold">「請副手展開擔架及脫除軍靴」</li>
+                        <ol className="list-decimal list-inside space-y-2 text-slate-400">
+                            <li><span className="text-white">檢查止血帶</span>：有無鬆脫、有無滲血。<span className="text-yellow-400 block ml-5 text-sm">⚠ 有移動患者均需檢查處置是否穩固</span></li>
+                            <li>卸除武裝及通信器材。</li>
+                            <li><span className="text-white">評估意識</span>：AVPU (清、聲、痛、否)。
+                                <span className="text-slate-500 text-sm ml-2">(若無意識量測有無脈搏)</span>
+                            </li>
+                            <li className="text-emerald-400 font-bold border-t border-slate-700 pt-2 mt-2">「請副手展開擔架及脫除軍靴」</li>
                         </ol>
                     </div>
 
@@ -196,25 +202,24 @@
                         
                         <MarchCard letter="M" title="Massive Hemorrhage 嚴重出血" color="text-red-500" border="border-red-500">
                             <ul className="list-disc list-inside space-y-1 text-slate-300">
-                                <li>控制六大出血點及四肢。</li>
-                                <li>重點檢查：頸動脈、腋下、鼠蹊部。</li>
-                                <li>處置：加壓止血、止血帶、傷口填塞。</li>
+                                <li>最重出血、控制出血。</li>
+                                <li><strong>檢查六大出血點：</strong>頸動脈、腋下、鼠蹊部 (雙側)。</li>
+                                <li>檢查四肢。</li>
                             </ul>
                         </MarchCard>
 
                         <MarchCard letter="A" title="Airway 呼吸道" color="text-blue-400" border="border-blue-400">
                             <div className="space-y-2 text-slate-300">
-                                <p><strong>動作：</strong>卸鋼盔 ➔ 提下顎法 (評估有無鼾音/雜音)。</p>
-                                <p><strong>處置：</strong>上鼻咽呼吸道 (NPA)。</p>
-                                <div className="bg-slate-900 p-2 rounded text-sm border-l-2 border-yellow-500">
-                                    <span className="text-yellow-500 font-bold">注意：</span>需以血水或口水潤滑。
-                                </div>
-                                <div className="bg-red-950/50 p-2 rounded text-sm text-red-200">
-                                    <strong>🚫 禁忌症 (顱底骨折徵兆)：</strong>
-                                    <ul className="list-disc list-inside ml-2">
-                                        <li>熊貓眼 (Raccoon eyes)</li>
-                                        <li>耳漏、鼻漏 (CSF leakage)</li>
-                                        <li>蝙蝠耳/戰鬥氏徵象 (Battle's sign - 耳後瘀青)</li>
+                                <p><strong>動作：</strong>卸鋼盔 ➔ 檢查口中有無異物 ➔ 提下顎法打開呼吸道。</p>
+                                <p><strong>評估：</strong>有無鼾音、雜音？ (若有或意識不清 ➔ 上鼻咽)。</p>
+                                <div className="bg-slate-900 p-3 rounded text-sm border-l-2 border-yellow-500">
+                                    <span className="text-yellow-500 font-bold">上鼻咽前檢查：</span>
+                                    <ul className="grid grid-cols-2 gap-2 mt-1 list-disc list-inside text-slate-400">
+                                        <li>熊貓眼</li>
+                                        <li>耳漏、鼻漏</li>
+                                        <li>蝙蝠耳 (耳後瘀青)</li>
+                                        <li>鼻毛有無燒焦</li>
+                                        <li>顏面有無骨折</li>
                                     </ul>
                                 </div>
                             </div>
@@ -222,27 +227,62 @@
 
                         <MarchCard letter="R" title="Respiration 呼吸評估" color="text-cyan-400" border="border-cyan-400">
                             <div className="space-y-2 text-slate-300">
-                                <p><strong>動作：</strong>脫上衣「戰鬥背心」 ➔ 以看聽方式檢查胸部起伏是否一致。</p>
-                                <p><strong>檢查手法：</strong>虎抓方式檢查胸部（鎖骨到肚臍）。</p>
-                                <p><strong>氣胸處置：</strong>胸封、針刺減壓。</p>
-                                <p><strong>後續檢查：</strong>骨盆檢查 ➔ 翻身檢查背部 ➔ 上擔架 (預先放好保暖毯)。</p>
+                                <ul className="list-disc list-inside space-y-1">
+                                    <li>脫去裝備、剪開上衣。</li>
+                                    <li>處置可目視之傷口。</li>
+                                    <li><strong>看聽檢查：</strong>胸部起伏是否一致 (鎖骨到肚臍範圍)。</li>
+                                    <li><strong>虎爪檢查：</strong>有無其他傷口。</li>
+                                    <li><strong>骨盆檢查：</strong>是否穩固。</li>
+                                    <li><strong>背部檢查：</strong>坐起檢查背部 (虎爪)，檢查完實施傷口包紮。</li>
+                                    <li>檢查 XX (各項處置) 是否穩固。</li>
+                                </ul>
+                                <div className="mt-3 grid grid-cols-2 gap-2">
+                                    <div className="bg-red-900/20 p-2 rounded border border-red-800/50">
+                                        <div className="font-bold text-red-400 text-sm">開放型氣胸</div>
+                                        <div className="text-xs text-red-200">彈孔 ➔ 胸封</div>
+                                    </div>
+                                    <div className="bg-red-900/20 p-2 rounded border border-red-800/50">
+                                        <div className="font-bold text-red-400 text-sm">張力型氣胸</div>
+                                        <div className="text-xs text-red-200">缺氧 ➔ 針刺減壓</div>
+                                    </div>
+                                </div>
                             </div>
                         </MarchCard>
 
                         <MarchCard letter="C" title="Circulation 循環" color="text-pink-500" border="border-pink-500">
-                            <div className="space-y-2 text-slate-300">
-                                <p>檢查處置是否鬆脫 (止血帶、胸封、針刺)。</p>
-                                <p>檢查脈搏 (橈動脈、頸動脈)。</p>
-                                <p>評估休克徵兆：膚色蒼白、體溫濕冷。</p>
+                            <div className="space-y-3 text-slate-300">
+                                <div className="bg-slate-900 p-3 rounded">
+                                    <h4 className="font-bold text-pink-400 mb-2 text-sm">脈搏與生命徵象檢查</h4>
+                                    <ul className="space-y-2 text-sm">
+                                        <li className="flex justify-between">
+                                            <span>橈動脈 (手腕)</span>
+                                            <span className="text-emerald-400">摸到 = 血壓 > 80</span>
+                                        </li>
+                                        <li className="flex justify-between">
+                                            <span>頸動脈</span>
+                                            <span className="text-yellow-400">摸到 = 血壓 > 60</span>
+                                        </li>
+                                        <li className="border-t border-slate-700 pt-2">
+                                            <strong>膚色：</strong>用患者手臂比對臉 (是否蒼白)
+                                        </li>
+                                        <li>
+                                            <strong>體溫：</strong>手背碰觸患者肚子 (是否濕冷)
+                                        </li>
+                                    </ul>
+                                </div>
                                 
                                 <div className="mt-4 border-t border-slate-700 pt-3">
-                                    <p className="font-bold text-emerald-400 mb-2">📞 9-Line Part 1 (Line 3,4,5)</p>
+                                    <p className="font-bold text-emerald-400 mb-2 flex items-center gap-2">
+                                        <Icon name="radio" className="w-4 h-4" /> 
+                                        回報 3 Line (3,4,5項) + 簡易 MIST
+                                    </p>
                                     <RadioScript 
                                         callsign="小雞呼叫老鷹"
                                         content={[
                                             "(3) 現場一名紅色緊急",
+                                            "(4) 需要直升機、氧氣鋼瓶、AED、血漿",
                                             "(5) 擔架運送傷患",
-                                            "(4) 需要直升機、氧氣鋼瓶(O2)、AED，血漿2000cc及急救裝備"
+                                            "簡易 MIST：患者左大腿，已上完止血帶，右胸口有槍傷，已上胸封...等先前完成的處置。"
                                         ]}
                                     />
                                 </div>
@@ -251,15 +291,17 @@
 
                         <MarchCard letter="H" title="Head/Hypothermia 頭部/低體溫" color="text-orange-400" border="border-orange-400">
                             <ul className="list-disc list-inside space-y-1 text-slate-300">
-                                <li>檢查頭部有無出血。</li>
-                                <li>臉部有無對稱。</li>
-                                <li><strong>保暖</strong>：蓋上毛毯 (防止致死三元組：低體溫、酸中毒、凝血異常)。</li>
+                                <li><strong>全身評估：</strong>檢查頭部 (額頭、顴骨、下顎)。</li>
+                                <li><strong>保暖：</strong>檢查完體溫蓋上毛毯 (會提前至檢查完體溫後進行)。</li>
+                                <li>檢查 XX (各項處置) 是否穩固？(止血帶、鼻咽、胸封、針刺減壓、包紮...等)。</li>
+                                <li>回報 6 Line。</li>
+                                <li>請副手剪除多餘衣物。</li>
                             </ul>
                         </MarchCard>
                     </div>
 
-                    <div className="text-center p-4 bg-slate-800 rounded-lg text-slate-400 text-sm">
-                         ⬇️ 抬傷患至交接處 ⬇️
+                    <div className="text-center p-4 bg-slate-800 rounded-lg text-slate-400 text-sm border-t-2 border-b-2 border-slate-700">
+                         ⬇️ 抬傷患至戰術後送照護區 (CCP) ⬇️
                     </div>
                 </div>
             );
@@ -274,57 +316,74 @@
                             <Icon name="ambulance" className="w-6 h-6" /> 
                             CCP & TACEVAC 後送照護
                         </h2>
-                        <p className="text-blue-200 mt-2 text-sm">傷患收集點與傷票填寫。</p>
-                    </div>
-
-                    {/* 9-Line Part 2 */}
-                    <div className="glass-panel p-4 rounded-lg">
-                        <h3 className="font-bold text-white mb-2 flex items-center gap-2">
-                            <Icon name="radio" className="w-5 h-5" /> 9-Line Part 2
-                        </h3>
-                        <RadioScript 
-                            callsign="小雞呼叫老鷹，剩下6Line"
-                            content={[
-                                "(1) 現在位置為衛光營區，坐標12345678",
-                                "(2) 無線電頻率99.9 呼號小雞",
-                                "(6) 此地地勢平坦無敵情",
-                                "(9) 無放生化核污染",
-                                "(8) 傷患為中華民國國籍軍人",
-                                "請於到達前00分鐘實施通聯",
-                                "(7) 我將以紅色反光板做為標示點，請問是否抄收"
-                            ]}
-                        />
+                        <p className="text-blue-200 mt-2 text-sm">檢查處置穩固性、傷票填寫、完整交接。</p>
                     </div>
 
                     {/* PAWS */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="col-span-2 text-lg font-bold text-white mb-1">PAWS 護理檢查</div>
-                        <PawsItem letter="P" text="Pain 疼痛控制" />
-                        <PawsItem letter="A" text="Antibiotics 抗生素" />
-                        <PawsItem letter="W" text="Wounds 傷口包紮" />
-                        <PawsItem letter="S" text="Splinting 骨折固定" />
+                        <PawsItem letter="P" title="Pain 疼痛" desc="意識評估決定給藥。若無意識則口述：因患者無意識不給予口服藥物。" />
+                        <PawsItem letter="A" title="Antibiotics 抗生素" desc="同上，依意識決定。" />
+                        <PawsItem letter="W" title="Wounds 傷口" desc="檢查四肢有無其他傷情。有出血先處置，包含最前面止血帶傷口。" />
+                        <PawsItem letter="S" title="Splinting 固定" desc="固定四肢。注意：固定前後需測量脈感動。" />
                     </div>
 
-                    {/* MIST & Ticket */}
-                    <div className="bg-slate-800 p-5 rounded-lg border border-slate-600">
-                        <h3 className="text-xl font-bold text-white mb-4 flex justify-between items-center">
-                            <span>傷票交接 (MIST)</span>
-                            <Icon name="file-text" className="w-5 h-5 text-slate-400" />
-                        </h3>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <MistItem label="M (Mechanism)" desc="傷情機制" placeholder="槍傷、爆炸傷" />
-                            <MistItem label="I (Injury)" desc="受傷部位" placeholder="右大腿出血、右胸氣胸" />
-                            <MistItem label="S (Signs)" desc="病徵" placeholder="呼吸急促、膚色蒼白、休克" />
-                            <MistItem label="T (Treatment)" desc="治療處置" placeholder="止血帶、胸封、保暖" />
+                    {/* Vital Signs Calculation */}
+                    <div className="bg-slate-800 p-4 rounded-lg border border-slate-600">
+                        <h3 className="font-bold text-white mb-2">填寫傷票 - 數值量測</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div className="bg-slate-900 p-3 rounded">
+                                <div className="text-slate-400">脈搏 (Pulse)</div>
+                                <div className="font-mono text-emerald-400 text-lg">10秒量測次數 x 6</div>
+                                <div className="text-xs text-slate-500 mt-1">口述：測量患者脈搏前後不超過 10 秒... 7, 8, 9, 10</div>
+                            </div>
+                            <div className="bg-slate-900 p-3 rounded">
+                                <div className="text-slate-400">呼吸 (Respiration)</div>
+                                <div className="font-mono text-emerald-400 text-lg">10秒量測次數 x 6</div>
+                                <div className="text-xs text-slate-500 mt-1">口述：測量患者呼吸前後不超過 10 秒... 7, 8, 9, 10</div>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="bg-black/40 p-3 rounded border-l-4 border-blue-500">
-                            <p className="text-xs text-slate-400 mb-1">無線電範例：</p>
-                            <p className="text-sm text-blue-300 font-mono">
-                                「目前傷情為槍傷、爆炸傷，右大腿出血、右胸開放性氣胸。病徵呼吸急促、體溫濕冷、膚色蒼白、有休克現象。已做處置：止血帶止血、胸封、建立鼻咽呼吸道、並給予保暖。請問是否抄收。」
+                    {/* 9-Line Part 2 & MIST */}
+                    <div className="glass-panel p-4 rounded-lg">
+                        <h3 className="font-bold text-white mb-2 flex items-center gap-2">
+                            <Icon name="radio" className="w-5 h-5" /> 救護車抵達交接 (6 Line + MIST)
+                        </h3>
+                        <RadioScript 
+                            callsign="小雞呼叫老鷹，剩下 6 Line"
+                            content={[
+                                "(1) 接送地點：衛光營區 (座標12345678)",
+                                "(2) 無線電頻率 99.9 呼號小雞",
+                                "(6) 現場安全 (無敵情)",
+                                "(9) 生化學汙染 (無)",
+                                "(8) 病人國籍和狀態 (本國軍人)",
+                                "請於到達前 00 分鐘實施通聯",
+                                "(7) 標誌後送點 (紅色反光板/煙幕彈)"
+                            ]}
+                        />
+                         <div className="mt-4 bg-slate-900/80 p-3 rounded border-l-4 border-blue-500">
+                            <p className="text-xs text-slate-400 mb-1">完整 MIST 報告範例：</p>
+                            <p className="text-sm text-blue-300 font-mono leading-relaxed">
+                                「目前傷情為槍傷、爆炸傷(M)，右大腿出血、右胸開放性氣胸(I)。病徵呼吸急促、體溫濕冷、膚色蒼白、有休克現象(S)。已做處置：止血帶止血、胸封、建立鼻咽呼吸道、並給予保暖(T)。請問是否抄收。」
                             </p>
                         </div>
+                    </div>
+
+                    {/* 9-Line Reference */}
+                    <div className="bg-slate-800 p-4 rounded-lg">
+                         <h3 className="font-bold text-slate-400 text-sm mb-2">9-Line MEDEVAC 項目對照</h3>
+                         <ol className="list-decimal list-inside text-xs text-slate-500 grid grid-cols-1 md:grid-cols-2 gap-1">
+                            <li>接送地點 (8碼座標)</li>
+                            <li>無線電頻率、呼號</li>
+                            <li>傷患數、優先順序</li>
+                            <li>特殊器材</li>
+                            <li>依種類標記病人 (擔架/可走)</li>
+                            <li>現場安全 (有無敵情)</li>
+                            <li>標誌後送點 (反光板/信號彈)</li>
+                            <li>病人國籍和狀態</li>
+                            <li>生化學汙染 (化生放核)</li>
+                         </ol>
                     </div>
                 </div>
             );
@@ -338,24 +397,24 @@
                     
                     <div className="bg-slate-800 p-4 rounded-lg">
                         <h3 className="font-bold text-white mb-4">快速記憶口訣卡</h3>
-                        <div className="grid gap-4">
+                        <div className="grid gap-4 md:grid-cols-2">
                             <div className="p-3 bg-slate-700 rounded border border-slate-600">
-                                <div className="font-bold text-emerald-400">意識評估：清、聲、痛、否</div>
-                                <div className="text-sm text-slate-400">AVPU (Alert, Verbal, Pain, Unresponsive)</div>
+                                <div className="font-bold text-emerald-400">意識評估 AVPU</div>
+                                <div className="text-sm text-slate-400">清(Alert)、聲(Verbal)、痛(Pain)、否(Unresponsive)</div>
                             </div>
                             <div className="p-3 bg-slate-700 rounded border border-slate-600">
-                                <div className="font-bold text-red-400">致死三元組</div>
-                                <div className="text-sm text-slate-400">低體溫、酸中毒、凝血功能異常</div>
+                                <div className="font-bold text-red-400">六大出血點</div>
+                                <div className="text-sm text-slate-400">頸動脈、腋下、鼠蹊部 (左右各一)</div>
                             </div>
                             <div className="p-3 bg-slate-700 rounded border border-slate-600">
-                                <div className="font-bold text-blue-400">禁忌症口訣</div>
-                                <div className="text-sm text-slate-400">熊貓眼、蝙蝠耳、耳漏鼻漏 ➡️ 禁用 NPA</div>
+                                <div className="font-bold text-blue-400">禁忌症口訣 (禁用NPA)</div>
+                                <div className="text-sm text-slate-400">熊貓眼、蝙蝠耳、耳漏鼻漏、鼻毛燒焦、顏面骨折</div>
+                            </div>
+                            <div className="p-3 bg-slate-700 rounded border border-slate-600">
+                                <div className="font-bold text-pink-400">血壓估算</div>
+                                <div className="text-sm text-slate-400">橈動脈 > 80 mmHg <br/> 頸動脈 > 60 mmHg</div>
                             </div>
                         </div>
-                    </div>
-                    
-                     <div className="text-center text-xs text-slate-500 mt-10">
-                        本網頁僅供教學輔助參考，實際操作請依據最新 TCCC 準則與教官指導為準。
                     </div>
                 </div>
             );
@@ -368,14 +427,14 @@
             return (
                 <div 
                     onClick={() => setChecked(!checked)}
-                    className={`flex items-center p-3 rounded cursor-pointer transition-colors ${
-                        checked ? 'bg-emerald-900/40 border border-emerald-700' : 'bg-slate-800 border border-slate-700 hover:bg-slate-750'
+                    className={`flex items-start p-3 rounded cursor-pointer transition-colors ${
+                        checked ? 'bg-emerald-900/40 border border-emerald-700' : 'bg-slate-900 border border-slate-700 hover:bg-slate-750'
                     }`}
                 >
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 border ${
+                    <div className={`mt-1 w-5 h-5 min-w-[1.25rem] rounded-full flex items-center justify-center mr-3 border ${
                         checked ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-500 text-transparent'
                     }`}>
-                        ✓
+                        <Icon name="check" className="w-3 h-3" />
                     </div>
                     <span className={checked ? 'text-emerald-100 line-through decoration-emerald-500/50' : 'text-slate-300'}>
                         {text}
@@ -396,7 +455,7 @@
                             <span className={`text-3xl font-black ${color} font-mono w-8`}>{letter}</span>
                             <span className="font-bold text-slate-200">{title}</span>
                         </div>
-                        <Icon name={isOpen ? "chevron-up" : "chevron-down"} className="text-slate-500" />
+                        <Icon name={isOpen ? "chevron-up" : "chevron-down"} className="text-slate-500 w-5 h-5" />
                     </button>
                     {isOpen && (
                         <div className="p-4 pt-0 border-t border-slate-700/50 bg-slate-800/50">
@@ -411,35 +470,28 @@
 
         const RadioScript = ({ callsign, content }) => (
             <div className="font-mono bg-black p-4 rounded-md border border-slate-700 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20">
-                   <Icon name="radio" className="w-16 h-16 text-emerald-500" />
+                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 pointer-events-none">
+                   <Icon name="radio" className="w-24 h-24 text-emerald-500" />
                 </div>
-                <div className="text-emerald-500 font-bold mb-2 border-b border-emerald-900 pb-1">
+                <div className="text-emerald-500 font-bold mb-2 border-b border-emerald-900 pb-1 z-10 relative">
                     {callsign}，聽到請回答：
                 </div>
-                <div className="space-y-1 text-emerald-100/90 text-sm">
+                <div className="space-y-1 text-emerald-100/90 text-sm z-10 relative">
                     {content.map((line, idx) => (
-                        <div key={idx}>{line}</div>
+                        <div key={idx} className="mb-1">{line}</div>
                     ))}
                 </div>
-                <div className="mt-2 text-emerald-700 text-xs text-right">OVER</div>
+                <div className="mt-2 text-emerald-700 text-xs text-right z-10 relative">OVER</div>
             </div>
         );
 
-        const PawsItem = ({ letter, text }) => (
-            <div className="bg-slate-700 p-3 rounded flex items-center gap-3 border border-slate-600">
-                <div className="font-black text-xl text-yellow-400 w-6">{letter}</div>
-                <div className="text-sm font-medium text-slate-200">{text}</div>
-            </div>
-        );
-
-        const MistItem = ({ label, desc, placeholder }) => (
-            <div className="bg-slate-900 p-3 rounded border border-slate-700">
-                <div className="flex justify-between items-baseline mb-1">
-                    <span className="font-bold text-blue-400">{label}</span>
-                    <span className="text-xs text-slate-500">{desc}</span>
+        const PawsItem = ({ letter, title, desc }) => (
+            <div className="bg-slate-700 p-3 rounded flex flex-col gap-1 border border-slate-600">
+                <div className="flex items-center gap-2">
+                    <div className="font-black text-xl text-yellow-400 w-6">{letter}</div>
+                    <div className="font-bold text-slate-200">{title}</div>
                 </div>
-                <div className="text-sm text-slate-300">{placeholder}</div>
+                <div className="text-xs text-slate-400 ml-8">{desc}</div>
             </div>
         );
 
